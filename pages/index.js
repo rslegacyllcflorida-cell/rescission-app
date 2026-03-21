@@ -90,7 +90,7 @@ setResult({
 
 const copyResult = async () => { try { await navigator.clipboard.writeText(result.copyText); setCopied(true); setTimeout(() => setCopied(false), 2000); } catch (error) { console.error("Copy failed", error); } };
 
-return ( <main className="min-h-screen bg-slate-100 px-4 py-8 font-sans"> <div className="mx-auto max-w-2xl"> <div className="rounded-3xl bg-white shadow-xl"> <div className="bg-gradient-to-r from-violet-700 to-indigo-700 px-6 py-8 text-white"> <h1 className="text-4xl font-extrabold tracking-tight"> Right to Cancel Calculator </h1> </div>
+return ( <main className="min-h-screen bg-slate-100 px-4 py-8 font-sans"> <div className="mx-auto max-w-2xl"> <div className="rounded-3xl bg-white shadow-xl"> <div className="bg-gradient-to-r from-violet-700 to-indigo-700 px-6 py-8 text-white"> <h1 className="text-4xl font-extrabold tracking-tight"> Right to Cancel Calculator </h1> <p className="mt-3 max-w-xl text-sm text-violet-100 sm:text-base"> Enter a signing date and get the rescission deadline instantly, with a clear breakdown of how each day was counted. </p> </div>
 
 <div className="p-6">
         <input
@@ -152,9 +152,20 @@ return ( <main className="min-h-screen bg-slate-100 px-4 py-8 font-sans"> <div c
               </div>
             </div>
 
-            <p className="text-xs text-gray-500">
-              This tool is for informational purposes only.
-            </p>
+            <div className="rounded-2xl border border-amber-200 bg-amber-50 p-4">
+              <p className="text-sm text-amber-900">
+                For TILA rescission, business days are all calendar days except Sundays and federal legal holidays.
+              </p>
+              <p className="mt-2 text-sm text-amber-900">
+                This calculator assumes the selected date is the last of the three rescission-triggering events: consummation, delivery of material disclosures, and delivery of the right-to-cancel notice.
+              </p>
+              <p className="mt-2 text-sm text-amber-900">
+                Federal holidays are calculated automatically for the selected year based on the actual holiday date, not the observed weekday.
+              </p>
+              <p className="mt-2 text-sm text-amber-900">
+                This tool is for informational purposes only and is not legal advice. Always confirm deadlines with the lender, title company, attorney, or applicable law.
+              </p>
+            </div>
           </div>
         )}
       </div>
