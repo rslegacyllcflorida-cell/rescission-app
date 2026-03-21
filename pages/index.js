@@ -83,7 +83,7 @@ setResult({
   timeline,
   copyText: `Signing Date: ${formatDate(signingDate)}\nRescission Deadline: ${formatDate(
     rescissionDeadline
-  )}\nEarliest Funding: ${formatDate(fundingDate)}`,
+  )}\nEstimated Funding: ${formatDate(fundingDate)}`,
 });
 
 };
@@ -121,7 +121,7 @@ return ( <main className="min-h-screen bg-slate-100 px-4 py-8 font-sans"> <div c
               </div>
 
               <div className="p-4 bg-blue-50 rounded-xl">
-                <p className="text-sm">Funding Date</p>
+                <p className="text-sm">Estimated Funding</p>
                 <p className="font-bold">{result.fundingDate}</p>
               </div>
             </div>
