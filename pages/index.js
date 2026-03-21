@@ -10,7 +10,9 @@ function lastWeekdayOfMonth(year, month, weekday) { const last = new Date(year, 
 
 function observedHoliday(date) { const day = date.getDay(); if (day === 6) return addDays(date, -1); if (day === 0) return addDays(date, 1); return date; }
 
-function getFederalHolidays(year) { return [ { name: "New Year's Day", date: observedHoliday(new Date(year, 0, 1)) }, { name: 'Martin Luther King Jr. Day', date: nthWeekdayOfMonth(year, 0, 1, 3) }, { name: "Presidents Day", date: nthWeekdayOfMonth(year, 1, 1, 3) }, { name: "Memorial Day", date: lastWeekdayOfMonth(year, 4, 1) }, { name: "Juneteenth", date: observedHoliday(new Date(year, 5, 19)) }, { name: "Independence Day", date: observedHoliday(new Date(year, 6, 4)) }, { name: "Labor Day", date: nthWeekdayOfMonth(year, 8, 1, 1) }, { name: "Columbus Day", date: nthWeekdayOfMonth(year, 9, 1, 2) }, { name: "Veterans Day", date: observedHoliday(new Date(year, 10, 11)) }, { name: "Thanksgiving Day", date: nthWeekdayOfMonth(year, 10, 4, 4) }, { name: "Christmas Day", date: observedHoliday(new Date(year, 11, 25)) }, ]; }
+function fixedHolidayDate(year, month, day) { return new Date(year, month, day); }
+
+function getFederalHolidays(year) { return [ { name: "New Year's Day", date: fixedHolidayDate(year, 0, 1) }, { name: 'Martin Luther King Jr. Day', date: nthWeekdayOfMonth(year, 0, 1, 3) }, { name: "Presidents Day", date: nthWeekdayOfMonth(year, 1, 1, 3) }, { name: "Memorial Day", date: lastWeekdayOfMonth(year, 4, 1) }, { name: "Juneteenth", date: fixedHolidayDate(year, 5, 19) }, { name: "Independence Day", date: fixedHolidayDate(year, 6, 4) }, { name: "Labor Day", date: nthWeekdayOfMonth(year, 8, 1, 1) }, { name: "Columbus Day", date: nthWeekdayOfMonth(year, 9, 1, 2) }, { name: "Veterans Day", date: fixedHolidayDate(year, 10, 11) }, { name: "Thanksgiving Day", date: nthWeekdayOfMonth(year, 10, 4, 4) }, { name: "Christmas Day", date: fixedHolidayDate(year, 11, 25) }, ]; }
 
 function getHolidayMapForYears(years) { const map = new Map();
 
@@ -208,7 +210,7 @@ return ( <main className="min-h-screen bg-slate-100 px-4 py-8 sm:px-6"> <div cla
                           : "bg-rose-100 text-rose-700"
                       }`}
                     >
-                      {item.status === "counted" ? "Counted" : "Skipped"} • {item.label}
+                      {item.status === "counted" ? "✅ Counted" : "❌ Skipped"} • {item.label}
                     </span>
                   </div>
                 ))}
