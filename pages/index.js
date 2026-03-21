@@ -33,6 +33,13 @@ let date = addDays(signingDate, 1);
 let count = 0;
 const timeline = [];
 
+// Add signing date at top of timeline
+timeline.push({
+  date: formatDate(signingDate),
+  status: "info",
+  label: "Signing Date",
+});
+
 while (count < 3) {
   const holidayName = getHolidayName(date);
 
@@ -70,7 +77,6 @@ while (isSunday(fundingDate) || isHoliday(fundingDate)) {
 }
 
 setResult({
-  type: "calculation",
   signingDate: formatDate(signingDate),
   rescissionDeadline: formatDate(rescissionDeadline),
   fundingDate: formatDate(fundingDate),
@@ -82,112 +88,73 @@ setResult({
 
 };
 
-const copyResult = async () => { if (!result || result.type !== "calculation") return;
+const copyResult = async () => { try { await navigator.clipboard.writeText(result.copyText); setCopied(true); setTimeout(() => setCopied(false), 2000); } catch (error) { console.error("Copy failed", error); } };
 
-try {
-  await navigator.clipboard.writeText(result.copyText);
-  setCopied(true);
-  setTimeout(() => setCopied(false), 2000);
-} catch (error) {
-  console.error("Copy failed", error);
-}
+return ( <main className="min-h-screen bg-slate-100 px-4 py-8 font-sans"> <div className="mx-auto max-w-2xl"> <div className="rounded-3xl bg-white shadow-xl"> <div className="bg-gradient-to-r from-violet-700 to-indigo-700 px-6 py-8 text-white"> <h1 className="text-4xl font-extrabold tracking-tight"> Right to Cancel Calculator </h1> </div>
 
-};
+<div className="p-6">
+        <input
+          type="date"
+          value={inputDate}
+          onChange={(e) => setInputDate(e.target.value)}
+          className="w-full rounded-xl border p-3 mb-4"
+        />
 
-return ( <main className="min-h-screen bg-slate-100 px-4 py-8 sm:px-6"> <div className="mx-auto max-w-2xl"> <div className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-xl shadow-slate-200/60"> <div className="bg-gradient-to-r from-violet-700 to-indigo-700 px-6 py-8 text-white sm:px-8"> <p className="mb-2 text-sm font-semibold uppercase tracking-[0.2em] text-violet-100"> Real Estate Utility </p> <h1 className="text-4xl font-black leading-tight tracking-tight sm:text-5xl"> Right to Cancel Calculator </h1> <p className="mt-3 max-w-xl text-sm text-violet-100 sm:text-base"> Enter a date and get a clear rescission result with the counting shown below. </p> </div>
+        <button
+          onClick={calculate}
+          className="w-full bg-violet-700 text-white p-3 rounded-xl font-bold"
+        >
+          Calculate
+        </button>
 
-<div className="px-6 py-6 sm:px-8 sm:py-8">
-        <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4 sm:p-5">
-          <div>
-            <label className="mb-2 block text-sm font-semibold text-slate-700">
-              Signing Date
-            </label>
-            <input
-              type="date"
-              value={inputDate}
-              onChange={(e) => setInputDate(e.target.value)}
-              className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-base text-slate-900 outline-none transition focus:border-violet-500 focus:ring-4 focus:ring-violet-100"
-            />
-          </div>
-
-          <button
-            onClick={calculate}
-            className="mt-4 w-full rounded-xl bg-violet-700 px-5 py-3 text-base font-semibold text-white transition hover:bg-violet-800 focus:outline-none focus:ring-4 focus:ring-violet-200"
-          >
-            Calculate
-          </button>
-        </div>
-
-        {result && result.type === "calculation" && (
+        {result && (
           <div className="mt-6 space-y-4">
             <div className="grid gap-4 sm:grid-cols-3">
-              <div className="rounded-2xl border border-violet-200 bg-violet-50 p-5">
-                <p className="text-sm font-semibold uppercase tracking-wide text-violet-700">
-                  Signing Date
-                </p>
-                <p className="mt-2 text-2xl font-bold text-slate-900">
-                  {result.signingDate}
-                </p>
+              <div className="p-4 bg-violet-50 rounded-xl">
+                <p className="text-sm">Signing Date</p>
+                <p className="font-bold">{result.signingDate}</p>
               </div>
 
-              <div className="rounded-2xl border border-emerald-200 bg-emerald-50 p-5">
-                <p className="text-sm font-semibold uppercase tracking-wide text-emerald-700">
-                  Rescission Deadline
-                </p>
-                <p className="mt-2 text-2xl font-bold text-slate-900">
-                  {result.rescissionDeadline}
-                </p>
+              <div className="p-4 bg-emerald-50 rounded-xl">
+                <p className="text-sm">Rescission Deadline</p>
+                <p className="font-bold">{result.rescissionDeadline}</p>
               </div>
 
-              <div className="rounded-2xl border border-blue-200 bg-blue-50 p-5">
-                <p className="text-sm font-semibold uppercase tracking-wide text-blue-700">
-                  Earliest Funding
-                </p>
-                <p className="mt-2 text-2xl font-bold text-slate-900">
-                  {result.fundingDate}
-                </p>
+              <div className="p-4 bg-blue-50 rounded-xl">
+                <p className="text-sm">Funding Date</p>
+                <p className="font-bold">{result.fundingDate}</p>
               </div>
             </div>
 
             <button
               onClick={copyResult}
-              className="w-full rounded-xl border border-slate-300 bg-white px-5 py-3 text-base font-semibold text-slate-900 transition hover:bg-slate-50 focus:outline-none focus:ring-4 focus:ring-slate-200"
+              className="w-full border p-3 rounded-xl"
             >
               {copied ? "Copied" : "Copy Result"}
             </button>
 
-            <div className="rounded-2xl border border-slate-200 bg-white p-5">
-              <h2 className="text-lg font-bold text-slate-900">
-                Calculation Details
-              </h2>
-              <div className="mt-4 space-y-4">
-                {result.timeline.map((item, index) => (
-                  <div
-                    key={index}
-                    className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-4"
-                  >
-                    <p className="text-base font-bold text-slate-900 sm:text-lg">
-                      {item.date}
-                    </p>
-                    <p
-                      className={`mt-1 text-sm font-medium sm:text-base ${
-                        item.status === "counted"
-                          ? "text-emerald-700"
-                          : "text-rose-700"
-                      }`}
-                    >
-                      {item.status === "counted" ? "✅ Counted" : "❌ Skipped"} • {item.label}
+            <div>
+              <h2 className="font-bold mb-2">Calculation Details</h2>
+              <div className="space-y-3">
+                {result.timeline.map((item, i) => (
+                  <div key={i} className="p-3 bg-slate-50 rounded-xl">
+                    <p className="font-bold">• {item.date}</p>
+                    <p className="text-sm mt-1">
+                      {item.status === "counted"
+                        ? "✅ Counted"
+                        : item.status === "skipped"
+                        ? "❌ Skipped"
+                        : "ℹ️ Info"}{" "}
+                      • {item.label}
                     </p>
                   </div>
                 ))}
               </div>
             </div>
 
-            <div className="rounded-2xl border border-amber-200 bg-amber-50 p-4">
-              <p className="text-sm text-amber-900">
-                For TILA rescission, business days are all calendar days except Sundays and federal legal holidays. This calculator assumes the selected date is the last of the three rescission-triggering events: consummation, delivery of material disclosures, and delivery of the right-to-cancel notice. This tool is for informational purposes only, not legal advice.
-              </p>
-            </div>
+            <p className="text-xs text-gray-500">
+              This tool is for informational purposes only.
+            </p>
           </div>
         )}
       </div>
